@@ -31,7 +31,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUp;
     private EditText email, password;
     private GoogleSignInClient mGoogleSignInClient;
+
     private final String GSO_ID_TOKEN = "87118424386-qnbbtp8ad2hj41rco3ci1osa06mp31ub.apps.googleusercontent.com";
+    private final int GSO_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signUpGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 100);
+        startActivityForResult(signInIntent, GSO_CODE );
     }
 
     @Override
@@ -89,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == 100) {
+        if (requestCode == GSO_CODE ) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
