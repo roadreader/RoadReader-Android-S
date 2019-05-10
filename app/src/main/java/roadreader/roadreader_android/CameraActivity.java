@@ -12,7 +12,7 @@ public class CameraActivity extends AppCompatActivity {
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
     VideoView videoView;
-    SensorListener sensor;
+    GPS gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class CameraActivity extends AppCompatActivity {
         videoView = (VideoView) findViewById(R.id.videoView);
         dispatchTakeVideoIntent();
 
-        sensor = new SensorListener(this);
+        gps = new GPS(this);
 
     }
 
@@ -50,24 +50,24 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        sensor.resume();
+        gps.resume();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        sensor.start();
+        gps.start();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        sensor.stop();
+        gps.stop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensor.pause();
+        gps.pause();
     }
 }

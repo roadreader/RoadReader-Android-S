@@ -22,9 +22,9 @@ public class Trip {
      * @param longitude
      */
     public void addGPSPoint(HashMap<String, ArrayList<Float>> sensor_data,
-                       float latitude, float longitude) throws IOException {
+                       double latitude, double longitude, long time) throws IOException {
 
-        GPSPoint gps = new GPSPoint(sensor_data, latitude, longitude);
+        GPSPoint gps = new GPSPoint(sensor_data, latitude, longitude, time);
 
         String square_name = gps.getSquare();
         Boolean square_exists = false;

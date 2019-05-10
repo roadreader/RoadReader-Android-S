@@ -1,6 +1,5 @@
 package roadreader.roadreader_android;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -16,14 +15,15 @@ class GPSPoint {
     final String API_KEY = "YK9ZNUS6";
 
     HashMap<String, ArrayList<Float>> sensor_data;
-    byte[][][][] vid;
-    float lat, lng;
+    long time;
+    double lat, lng;
 
-    public GPSPoint (HashMap<String, ArrayList<Float>> sensorData, float latitude, float longitude) {
+    public GPSPoint (HashMap<String, ArrayList<Float>> sensorData, double latitude, double longitude, long timestamp) {
 
         sensor_data = new HashMap<>(sensorData);
         lat = latitude;
         lng = longitude;
+        time = timestamp;
     }
 
     public GPSPoint(float latitude, float longitude) {
