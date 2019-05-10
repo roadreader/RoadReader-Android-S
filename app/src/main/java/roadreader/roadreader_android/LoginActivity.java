@@ -71,8 +71,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null){
+            Toast.makeText(this,currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void signUpGoogle() {

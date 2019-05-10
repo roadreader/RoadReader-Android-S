@@ -1,32 +1,23 @@
 package roadreader.roadreader_android;
 
-import android.*;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.List;
 
 import roadreader.roadreader_android.media.CameraHelper;
@@ -40,7 +31,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private Camera.CameraInfo mCameraInfo;
     private CamcorderProfile profile;
     private FrameLayout layout;
-    private CameraPreview cp;
+    private CameraPreview cameraPreview;
     private TextureView mPreview;
     private MediaRecorder mMediaRecorder;
     private File mOutputFile;
@@ -87,8 +78,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
         mCamera.setParameters(parameters);
         mCamera = CameraHelper.getDefaultBackFacingCameraInstance();
-        cp = new CameraPreview(this, mCamera);
-        layout.addView(cp);
+        cameraPreview = new CameraPreview(this, mCamera);
+        layout.addView(cameraPreview);
     }
 
 
