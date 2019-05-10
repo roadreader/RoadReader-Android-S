@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUp;
     private EditText email, password;
     private GoogleSignInClient mGoogleSignInClient;
-    private final String GSO_ID_TOKEN = "";
+    private final String GSO_ID_TOKEN = "87118424386-qnbbtp8ad2hj41rco3ci1osa06mp31ub.apps.googleusercontent.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +71,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null){
+            Toast.makeText(this,currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void signUpGoogle() {
