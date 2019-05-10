@@ -41,6 +41,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private Button captureButton;
     private boolean canRecord = false;
 
+    private GPS gps;
+
     private final String[] requiredPermissions = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.RECORD_AUDIO,
@@ -56,7 +58,11 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         captureButton = (Button) findViewById(R.id.button_capture);
         layout = (FrameLayout) findViewById(R.id.camera_preview);
 
-        initCamera();
+        if (areCameraPermissionGranted()) {
+            initCamera();
+        } else {
+            requestCameraPermissions();
+        }
 
     }
 
@@ -313,6 +319,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             if (prepareVideoRecorder()) {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
+                //gps = new GPS(CameraActivity.this);
                 mMediaRecorder.start();
 
                 isRecording = true;
