@@ -1,5 +1,6 @@
 package roadreader.roadreader_android;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -47,6 +48,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.RECORD_AUDIO,
             android.Manifest.permission.CAMERA,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
     };
 
     @Override
@@ -296,7 +298,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         }
 
         if (areAllPermissionsGranted) {
-            //startCapture();
+            initCamera();
         } else {
             // User denied one or more of the permissions, without these we cannot record
             // Show a toast to inform the user.
