@@ -106,6 +106,12 @@ public class SensorListener implements SensorEventListener {
     }
 
     public HashMap<String, ArrayList<Float>> get_sensor_data() {
+        sensor_data.put("ax", ax);
+        sensor_data.put("ay", ay);
+        sensor_data.put("az", az);
+        sensor_data.put("gx", gx);
+        sensor_data.put("gy", gy);
+        sensor_data.put("gz", gz);
         return sensor_data;
     }
 

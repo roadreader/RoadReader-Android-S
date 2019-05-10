@@ -2,6 +2,7 @@ package roadreader.roadreader_android;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Trip {
@@ -16,16 +17,15 @@ public class Trip {
      * Creates new GPS instance and adds it to the trip. Adds the GPS location to
      * its corresponding square in trip's squareList. If square is not in suareList,
      * creates a new square and adds it to the list.
-     * @param accelerometer Data from accelerometer since last recorded GPS location
-     * @param gyroscope Data from accelerometer since last recorded GPS location
+     * @param sensor_data Data from accelerometer and gyroscope since last recorded GPS location
      * @param video Data from accelerometer since last recorded GPS location
      * @param latitude
      * @param longitude
      */
-    public void addGPS(float[][] accelerometer, float[][] gyroscope,
+    public void addGPS(HashMap<String, ArrayList<Float>> sensor_data,
                        byte[][][][] video, float latitude, float longitude) throws IOException {
 
-        GPS gps = new GPS(accelerometer, gyroscope, video, latitude, longitude);
+        GPS gps = new GPS(sensor_data, video, latitude, longitude);
 
         String square_name = gps.getSquare();
         Boolean square_exists = false;

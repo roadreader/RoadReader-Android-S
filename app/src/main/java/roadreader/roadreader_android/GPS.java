@@ -1,5 +1,6 @@
 package roadreader.roadreader_android;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -7,20 +8,22 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 class GPS {
     final String API_KEY = "YK9ZNUS6";
 
-    float[][] accel, gyro;
+    HashMap<String, ArrayList<Float>> sensor_data;
     byte[][][][] vid;
     float lat, lng;
 
-    public GPS (float[][] accelerometer, float[][] gyroscope,
+    public GPS (HashMap<String, ArrayList<Float>> sensorData,
                 byte[][][][] video, float latitude, float longitude) {
-        accel = accelerometer;
-        gyro = gyroscope;
-        vid = video;
+
+        sensor_data = new HashMap<>(sensorData);
+        vid = video.clone();
         lat = latitude;
         lng = longitude;
     }
