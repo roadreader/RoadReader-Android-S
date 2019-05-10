@@ -8,14 +8,14 @@ public class Square {
     /**
      * Array of GPS coords recorded that correspond to this Square
      */
-    private List<GPS> gpsList;
+    private List<GPSPoint> gpsList;
 
     /**
      * Name assigned to square
      */
     private String name;
 
-    public Square (GPS gps, String sName) {
+    public Square (GPSPoint gps, String sName) {
         gpsList = new ArrayList<>();
         gpsList.add(gps);
         name = sName;
@@ -33,7 +33,7 @@ public class Square {
      * Adds a GPS instance to gpsList
      * @param gps GPS instance to add to GPS List
      */
-    public void addGPS(GPS gps) {
+    public void addGPSPoint(GPSPoint gps) {
         gpsList.add(gps);
     }
 }

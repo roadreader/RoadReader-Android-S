@@ -12,23 +12,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class GPS {
+class GPSPoint {
     final String API_KEY = "YK9ZNUS6";
 
     HashMap<String, ArrayList<Float>> sensor_data;
     byte[][][][] vid;
     float lat, lng;
 
-    public GPS (HashMap<String, ArrayList<Float>> sensorData,
-                byte[][][][] video, float latitude, float longitude) {
+    public GPSPoint (HashMap<String, ArrayList<Float>> sensorData, float latitude, float longitude) {
 
         sensor_data = new HashMap<>(sensorData);
-        vid = video.clone();
         lat = latitude;
         lng = longitude;
     }
 
-    public GPS(float latitude, float longitude) {
+    public GPSPoint(float latitude, float longitude) {
         lat = latitude;
         lng = longitude;
     }

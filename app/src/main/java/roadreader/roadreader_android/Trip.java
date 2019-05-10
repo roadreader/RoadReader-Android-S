@@ -18,14 +18,13 @@ public class Trip {
      * its corresponding square in trip's squareList. If square is not in suareList,
      * creates a new square and adds it to the list.
      * @param sensor_data Data from accelerometer and gyroscope since last recorded GPS location
-     * @param video Data from accelerometer since last recorded GPS location
      * @param latitude
      * @param longitude
      */
-    public void addGPS(HashMap<String, ArrayList<Float>> sensor_data,
-                       byte[][][][] video, float latitude, float longitude) throws IOException {
+    public void addGPSPoint(HashMap<String, ArrayList<Float>> sensor_data,
+                       float latitude, float longitude) throws IOException {
 
-        GPS gps = new GPS(sensor_data, video, latitude, longitude);
+        GPSPoint gps = new GPSPoint(sensor_data, latitude, longitude);
 
         String square_name = gps.getSquare();
         Boolean square_exists = false;
@@ -35,7 +34,7 @@ public class Trip {
                 if(squareList.get(i).getName().equals(square_name)) {
                     square_exists = true;
                     Square square = squareList.get(i);
-                    square.addGPS(gps);
+                    square.addGPSPoint(gps);
                     break;
                 }
             }
