@@ -12,6 +12,7 @@ public class CameraActivity extends AppCompatActivity {
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
     VideoView videoView;
+    SensorListener sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +21,10 @@ public class CameraActivity extends AppCompatActivity {
         videoView = (VideoView) findViewById(R.id.videoView);
         dispatchTakeVideoIntent();
 
+        sensor = new SensorListener(this);
+
     }
+
 
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -41,5 +45,29 @@ public class CameraActivity extends AppCompatActivity {
         else{
             Toast.makeText(this, String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensor.resume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sensor.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sensor.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensor.pause();
     }
 }
