@@ -2,7 +2,6 @@
 app/google-services.json
 
 *.iml
-.gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
