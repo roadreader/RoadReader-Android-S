@@ -28,7 +28,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button signUp;
+    private Button signUp, login;
     private EditText email, password;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -69,6 +69,16 @@ public class LoginActivity extends AppCompatActivity {
                 signupUser(email.getText().toString(), password.getText().toString());
             }
         });
+
+        login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(LoginActivity.this, CameraActivity.class));
+                }
+            }
+        });
     }
 
     @Override
@@ -77,8 +87,11 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser != null){
-            Toast.makeText(this,currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"hello " + currentUser.getEmail(),Toast.LENGTH_SHORT).show();
         }
+
+        //Intent signup = new Intent(LoginActivity.this, SignupActivity.class);
+        //startActivity(signup);
 
     }
 

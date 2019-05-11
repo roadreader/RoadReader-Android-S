@@ -56,7 +56,11 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         captureButton = (Button) findViewById(R.id.button_capture);
         layout = (FrameLayout) findViewById(R.id.camera_preview);
 
-        initCamera();
+        if (areCameraPermissionGranted()) {
+            initCamera();
+        } else {
+            requestCameraPermissions();
+        }
 
     }
 
@@ -290,7 +294,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         }
 
         if (areAllPermissionsGranted) {
-            //startCapture();
+            initCamera();
         } else {
             // User denied one or more of the permissions, without these we cannot record
             // Show a toast to inform the user.
