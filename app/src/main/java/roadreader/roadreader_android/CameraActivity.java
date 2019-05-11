@@ -101,6 +101,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     public void onCaptureClick(View view) {
 
         if (areCameraPermissionGranted()) {
+            gps = new GPS(CameraActivity.this);
             startCapture();
         } else {
             requestCameraPermissions();
@@ -149,6 +150,15 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     @Override
     protected void onResume() {
         super.onResume();
+        if(gps != null)
+            gps.resume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(gps != null)
+            gps.start();
     }
 
     @Override
@@ -159,6 +169,13 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(gps != null)
+            gps.stop();
     }
 
     private void releaseMediaRecorder() {
@@ -321,7 +338,6 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             if (prepareVideoRecorder()) {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
-                //gps = new GPS(CameraActivity.this);
                 mMediaRecorder.start();
 
                 isRecording = true;

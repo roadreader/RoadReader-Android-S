@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Timer;
 
 public class GPS implements LocationListener {
 
@@ -24,15 +25,14 @@ public class GPS implements LocationListener {
     LocationListener locationListener;
     SensorListener sensor;
     Trip trip;
-    Date date;
+    Timer timer;
 
     public GPS(Context context) {
 
         trip = new Trip();
         sensor = new SensorListener(context);
 
-        date = new Date();
-        final long start = date.getTime();
+        final long start_time = System.currentTimeMillis();
 
         locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
@@ -40,9 +40,9 @@ public class GPS implements LocationListener {
             public void onLocationChanged(Location location) {
                 double lng = location.getLongitude();
                 double lat = location.getLatitude();
-                long time = date.getTime() - start;
-                Log.d("GPS", "lat: " + lat + ", lng: " + lng + "\n" +
-                        time + "\n");
+                long time = System.currentTimeMillis() - start_time;
+                Log.d("GPS", "lat: " + lat + ", lng: " + lng + ", " +
+                        "time: " + time + "\n");
                 try {
                     trip.addGPSPoint(sensor.get_sensor_data(), lat, lng, time);
                 } catch (Exception e) {
@@ -68,39 +68,20 @@ public class GPS implements LocationListener {
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            showAlert(context);
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            Log.d("GPS", "Location disabled\n");
             return;
         }
-        locationManager.requestLocationUpdates(locationProvider, 1000, 0, locationListener);
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+        //locationManager.requestSingleUpdate(locationProvider, locationListener);
 
     }
 
-    private void showAlert(final Context context) {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle("Enable Location");
-        dialog.setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
-                "use this app");
-        dialog.setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+    public void track_on (Context context) {
 
-            @Override
-            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(myIntent);
-            }
-        });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-            }
-        });
-        dialog.show();
+    }
+
+    public void track_off(Context context) {
+
     }
 
     private boolean isLocationEnabled() {
@@ -125,9 +106,13 @@ public class GPS implements LocationListener {
         sensor.pause();
     }
 
+    public Trip getTrip() {
+        return trip;
+    }
+
     @Override
     public void onLocationChanged(Location location) {
-
+        //locationListener.onLocationChanged(location);
     }
 
     @Override

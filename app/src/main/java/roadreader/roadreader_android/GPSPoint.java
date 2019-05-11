@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class GPSPoint {
-    final String API_KEY = "YK9ZNUS6";
+        final String API_KEY = "YK9ZNUS6";
 
     HashMap<String, ArrayList<Float>> sensor_data;
     long time;
@@ -26,7 +26,12 @@ class GPSPoint {
         time = timestamp;
     }
 
-    public GPSPoint(float latitude, float longitude) {
+    /**
+     * Constructor for testing
+     * @param latitude
+     * @param longitude
+     */
+    public GPSPoint(double latitude, double longitude) {
         lat = latitude;
         lng = longitude;
     }
