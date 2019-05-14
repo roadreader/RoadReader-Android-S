@@ -1,6 +1,9 @@
 package roadreader.roadreader_android;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,19 +27,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button signUp;
+    private Button signUp, login;
     private EditText email, password;
     private GoogleSignInClient mGoogleSignInClient;
+
     private final String GSO_ID_TOKEN = "87118424386-qnbbtp8ad2hj41rco3ci1osa06mp31ub.apps.googleusercontent.com";
+    private final int GSO_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -46,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +75,39 @@ public class LoginActivity extends AppCompatActivity {
                 signupUser(email.getText().toString(), password.getText().toString());
             }
         });
+
+        login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(LoginActivity.this, ListActivity.class));
+                }
+
+
+
+                /*
+                File media = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES + File.separator + "RoadReader");
+                File [] files = media.listFiles();
+                for(int i = 0; i < files.length; i++) {
+                    Toast.makeText(LoginActivity.this, files[i].getName(), Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                mmr.setDataSource(files[0].getAbsolutePath());
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                Toast.makeText(LoginActivity.this, mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION), Toast.LENGTH_SHORT).show();
+                */
+
+
+            }
+        });
     }
 
     @Override
@@ -74,14 +116,17 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser != null){
-            Toast.makeText(this,currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"hello " + currentUser.getEmail(),Toast.LENGTH_SHORT).show();
         }
+
+        //Intent signup = new Intent(LoginActivity.this, SignupActivity.class);
+        //startActivity(signup);
 
     }
 
     private void signUpGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 100);
+        startActivityForResult(signInIntent, GSO_CODE );
     }
 
     @Override
@@ -89,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == 100) {
+        if (requestCode == GSO_CODE ) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);

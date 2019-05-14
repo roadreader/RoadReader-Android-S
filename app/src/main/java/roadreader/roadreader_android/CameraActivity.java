@@ -1,6 +1,7 @@
 package roadreader.roadreader_android;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -130,8 +131,9 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
-            // END_INCLUDE(stop_release_media_recorder)
 
+            //transition to listView
+            startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)
@@ -257,7 +259,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         mMediaRecorder.setCaptureRate(5);
 
         // Step 4: Set output file
-        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
+        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, CameraHelper.EXTERNAL_SAVE);
+
         if (mOutputFile == null) {
             return false;
         }
