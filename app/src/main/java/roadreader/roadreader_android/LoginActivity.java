@@ -1,5 +1,6 @@
 package roadreader.roadreader_android;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -74,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (mAuth.getCurrentUser() != null) {
                     startActivity(new Intent(LoginActivity.this, CameraActivity.class));
                 }

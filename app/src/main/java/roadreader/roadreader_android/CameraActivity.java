@@ -240,7 +240,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         mMediaRecorder.setCaptureRate(5);
 
         // Step 4: Set output file
-        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
+        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, CameraHelper.EXTERNAL_SAVE);
+
         if (mOutputFile == null) {
             return false;
         }
