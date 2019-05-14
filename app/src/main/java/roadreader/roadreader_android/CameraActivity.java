@@ -1,6 +1,7 @@
 package roadreader.roadreader_android;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -129,8 +130,9 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
-            // END_INCLUDE(stop_release_media_recorder)
 
+            //transition to listView
+            startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)

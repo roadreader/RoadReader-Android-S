@@ -97,12 +97,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.VideoViewHolde
         videoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //put intent code here
+                Intent intent = new Intent(context,DisplayActivity.class);
+                intent.putExtra("file",videos[i]);
+                context.startActivity(intent);
             }
         });
 
 
-    }
 
+    }
 
 }
