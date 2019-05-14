@@ -227,7 +227,7 @@ public class CameraHelper {
             }
 
             // Create a media file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+            String timeStamp = String.valueOf((System.currentTimeMillis() / 1000L));
             File mediaFile;
             if (type == MEDIA_TYPE_IMAGE) {
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator +

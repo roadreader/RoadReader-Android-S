@@ -2,6 +2,8 @@ package roadreader.roadreader_android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,8 +82,30 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (mAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(LoginActivity.this, CameraActivity.class));
+                    startActivity(new Intent(LoginActivity.this, ListActivity.class));
                 }
+
+
+
+                /*
+                File media = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES + File.separator + "RoadReader");
+                File [] files = media.listFiles();
+                for(int i = 0; i < files.length; i++) {
+                    Toast.makeText(LoginActivity.this, files[i].getName(), Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                mmr.setDataSource(files[0].getAbsolutePath());
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                Toast.makeText(LoginActivity.this, mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION), Toast.LENGTH_SHORT).show();
+                */
+
+
             }
         });
     }
