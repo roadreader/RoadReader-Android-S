@@ -40,8 +40,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.VideoViewHolde
             videoLength = item.findViewById(R.id.videoLength);
             videoSnapshot = item.findViewById(R.id.videoImageView);
         }
-
-
     }
 
 
