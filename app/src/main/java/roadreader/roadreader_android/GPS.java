@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -25,7 +27,6 @@ public class GPS implements LocationListener {
     LocationListener locationListener;
     SensorListener sensor;
     Trip trip;
-    Timer timer;
 
     public GPS(Context context) {
 
@@ -41,11 +42,16 @@ public class GPS implements LocationListener {
                 double lng = location.getLongitude();
                 double lat = location.getLatitude();
                 long time = System.currentTimeMillis() - start_time;
-                Log.d("GPS", "lat: " + lat + ", lng: " + lng + ", " +
+                Log.d("trip", "lat: " + lat + ", lng: " + lng + ", " +
                         "time: " + time + "\n");
                 try {
                     trip.addGPSPoint(sensor.get_sensor_data(), lat, lng, time);
+                    Log.d("trip", "Adding GPS Point");
                 } catch (Exception e) {
+                    Log.d("trip", "Could not add GPS Point");
+                    Log.d("trip", e.toString());
+                    e.printStackTrace();
+                    System.exit(-1);
                 }
                 ;
                 sensor.reset_sensor_data();
@@ -71,7 +77,8 @@ public class GPS implements LocationListener {
             Log.d("GPS", "Location disabled\n");
             return;
         }
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+        new GPSTask().execute();
+        //locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
         //locationManager.requestSingleUpdate(locationProvider, locationListener);
 
     }
@@ -88,6 +95,47 @@ public class GPS implements LocationListener {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
+
+
+
+    class GPSTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() throws SecurityException {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            String locationProvider = LocationManager.NETWORK_PROVIDER;
+
+            Looper.prepare();
+
+
+            try {
+                Log.d("trip", "Updating Location...");
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                Log.d("trip", "Location Updated");
+            } catch (SecurityException s) {
+                Log.d("trip", "Failed to get GPS permission");
+                return false;
+            };
+
+
+            Looper.loop();
+
+            return true;
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
     protected void resume() {

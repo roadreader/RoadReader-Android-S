@@ -1,16 +1,24 @@
 package roadreader.roadreader_android;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Trip {
+public class Trip implements Cloneable{
 
     List<Square> squareList;
 
     public Trip() {
         squareList = new ArrayList<>();
+    }
+
+    public Object clone() throws
+            CloneNotSupportedException
+    {
+        return super.clone();
     }
 
     /**
@@ -35,6 +43,7 @@ public class Trip {
                     square_exists = true;
                     Square square = squareList.get(i);
                     square.addGPSPoint(gps);
+                    Log.d("trip", "Adding to square: " + square_name);
                     break;
                 }
             }
@@ -42,6 +51,7 @@ public class Trip {
         if(!square_exists) {
             Square square = new Square(gps, square_name);
             squareList.add(square);
+            Log.d("trip", "Creating new square: " + square_name);
         }
     }
 

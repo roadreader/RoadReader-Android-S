@@ -1,12 +1,15 @@
 package roadreader.roadreader_android;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +21,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import roadreader.roadreader_android.media.CameraHelper;
@@ -37,11 +45,14 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private TextureView mPreview;
     private MediaRecorder mMediaRecorder;
     private File mOutputFile;
+    private OutputStream outputStream;
 
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
     private Button captureButton;
     private boolean canRecord = false;
+
+    String timeStamp;
 
     private GPS gps;
 
@@ -102,7 +113,6 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     public void onCaptureClick(View view) {
 
         if (areCameraPermissionGranted()) {
-            gps = new GPS(CameraActivity.this);
             startCapture();
         } else {
             requestCameraPermissions();
@@ -124,6 +134,45 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
                 //noinspection ResultOfMethodCallIgnored
                 mOutputFile.delete();
             }
+
+            Trip trip;
+            try {
+                trip = (Trip) gps.getTrip().clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+                trip = gps.getTrip();
+                Log.d("RoadReader", "failed to clone trip");
+            }
+
+            Gson gson = new Gson();
+
+            File tripInternalDir = new File(getFilesDir(), "Trips");
+            // This location works best if you want the created images to be shared
+            // between applications and persist after your app has been uninstalled.
+
+            // Create the storage directory if it does not exist
+            if (!tripInternalDir.exists()) {
+                if (!tripInternalDir.mkdirs()) {
+                    Log.d("RoadReader", "failed to create directory");
+                }
+            }
+
+            try {
+                File tripFile = new File(tripInternalDir, timeStamp + ".json");
+                //gson.toJson(trip, new FileWriter(tripFile));
+                Log.d("trip","Writing trip to file");
+                outputStream = new FileOutputStream(getFilesDir() + "/" + "Trips/" + tripFile.getName());
+                //outputStream = openFileOutputtripFile.getAbsolutePath(), Context.MODE_PRIVATE);
+                outputStream.write(gson.toJson(trip).getBytes());
+                outputStream.close();
+                Log.d("trip","Trip to String:");
+                Log.d("trip", gson.toJson(trip));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("trip", "failed to write trip to file");
+            }
+
+
             releaseMediaRecorder(); // release the MediaRecorder object
             mCamera.lock();         // take camera access back from MediaRecorder
 
@@ -136,10 +185,12 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
 
+            timeStamp = String.valueOf((System.currentTimeMillis() / 1000L));
+
             // BEGIN_INCLUDE(prepare_start_media_recorder)
 
             new MediaPrepareTask().execute(null, null, null);
-
+            gps = new GPS(this);
             // END_INCLUDE(prepare_start_media_recorder)
 
         }
@@ -259,7 +310,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         mMediaRecorder.setCaptureRate(5);
 
         // Step 4: Set output file
-        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, CameraHelper.EXTERNAL_SAVE);
+        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, CameraHelper.EXTERNAL_SAVE, timeStamp);
 
         if (mOutputFile == null) {
             return false;
@@ -362,6 +413,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
         }
     }
+
 }
 
 

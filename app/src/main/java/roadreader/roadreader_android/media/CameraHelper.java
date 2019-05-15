@@ -204,7 +204,7 @@ public class CameraHelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public  static File getOutputMediaFile(int type, int save){
+    public  static File getOutputMediaFile(int type, int save, String timeStamp){
 
         if(save == EXTERNAL_SAVE) {
             // To be safe, you should check that the SDCard is mounted
@@ -227,7 +227,6 @@ public class CameraHelper {
             }
 
             // Create a media file name
-            String timeStamp = String.valueOf((System.currentTimeMillis() / 1000L));
             File mediaFile;
             if (type == MEDIA_TYPE_IMAGE) {
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator +

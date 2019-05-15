@@ -55,6 +55,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.VideoViewHolde
 
     @Override
     public int getItemCount() {
+        if(videos == null){
+            return 0;
+        }
         return videos.length;
     }
 
