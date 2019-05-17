@@ -11,7 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class DisplayActivity extends AppCompatActivity {
@@ -36,7 +39,11 @@ public class DisplayActivity extends AppCompatActivity {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upload();
+                try {
+                    upload();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -44,7 +51,7 @@ public class DisplayActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete();
+                delete(false);
             }
         });
 
@@ -71,14 +78,28 @@ public class DisplayActivity extends AppCompatActivity {
         }
     }
 
-    private void upload() {
-        //TODO: package data and push to firestore
+    private void upload() throws FileNotFoundException {
+        String tripName = getTimestamp(video.getName());
+        File tripFile = new File(getFilesDir(), "Trips/" + tripName + ".json");
+        Request request = new Request(this);
+        request.sendTrip(tripFile, video.getAbsolutePath());
+        //request.sendVideo(video.getAbsolutePath(), ref);
     }
 
-    private void delete() {
+    public void delete(Boolean isSent) {
         videoView.stopPlayback();
-        Toast.makeText(this, "Video Deleted!", Toast.LENGTH_SHORT).show();
+        if(isSent)
+            Toast.makeText(this, "Video Sent!", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Video Deleted!", Toast.LENGTH_SHORT).show();
         video.delete();
         startActivity(new Intent(DisplayActivity.this, ListActivity.class));
+    }
+
+    private String getTimestamp(String videoName) {
+        int startIndex = 4;
+        int endIndex = videoName.indexOf(".mp4");
+        videoName = videoName.substring(startIndex,endIndex);
+        return videoName;
     }
 }

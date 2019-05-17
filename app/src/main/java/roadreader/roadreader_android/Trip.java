@@ -1,18 +1,22 @@
 package roadreader.roadreader_android;
 
-import android.util.Log;
+import com.google.firebase.storage.FirebaseStorage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Trip implements Cloneable{
 
-    List<Square> squareList;
+    List<GPSPoint> gpsPoints;
+    private String userId;
+    //private String tripID;
+    //Queue<GPSPoint> gpsQueue;
 
-    public Trip() {
-        squareList = new ArrayList<>();
+    public Trip(String uId) {
+        gpsPoints = new ArrayList<>();
+        userId = uId;
+        //gpsQueue = new PriorityQueue<>();
     }
 
     public Object clone() throws
@@ -21,18 +25,37 @@ public class Trip implements Cloneable{
         return super.clone();
     }
 
+    /*
+    public void setTripId(String ref) {
+        tripID = ref;
+    }
+
+    public String getTripId() {
+        return tripID;
+    }
+    */
+
+    public String getUserId() {
+        return userId;
+    }
+
     /**
-     * Creates new GPS instance and adds it to the trip. Adds the GPS location to
-     * its corresponding square in trip's squareList. If square is not in suareList,
-     * creates a new square and adds it to the list.
+     * Creates new GPS instance and adds it to the trip.
      * @param sensor_data Data from accelerometer and gyroscope since last recorded GPS location
      * @param latitude
      * @param longitude
      */
     public void addGPSPoint(HashMap<String, ArrayList<Float>> sensor_data,
-                       double latitude, double longitude, long time) throws IOException {
+                       double latitude, double longitude, long time) {
 
-        GPSPoint gps = new GPSPoint(sensor_data, latitude, longitude, time);
+        gpsPoints.add(new GPSPoint(sensor_data, latitude, longitude, time));
+
+    }
+
+    /*
+    public void processGPSPoint() throws IOException {
+
+        GPSPoint gps = gpsQueue.poll();
 
         String square_name = gps.getSquare();
         Boolean square_exists = false;
@@ -54,5 +77,6 @@ public class Trip implements Cloneable{
             Log.d("trip", "Creating new square: " + square_name);
         }
     }
+    */
 
 }

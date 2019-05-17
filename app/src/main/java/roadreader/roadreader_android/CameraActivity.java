@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -51,6 +53,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private static final String TAG = "Recorder";
     private Button captureButton;
     private boolean canRecord = false;
+    FirebaseUser user;
 
     String timeStamp;
 
@@ -144,6 +147,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
                 Log.d("RoadReader", "failed to clone trip");
             }
 
+            gps.stop();
+
             Gson gson = new Gson();
 
             File tripInternalDir = new File(getFilesDir(), "Trips");
@@ -190,7 +195,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             // BEGIN_INCLUDE(prepare_start_media_recorder)
 
             new MediaPrepareTask().execute(null, null, null);
-            gps = new GPS(this);
+            gps = new GPS(this, user.getUid());
             // END_INCLUDE(prepare_start_media_recorder)
 
         }
@@ -210,6 +215,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     @Override
     protected void onStart() {
         super.onStart();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if(gps != null)
             gps.start();
     }

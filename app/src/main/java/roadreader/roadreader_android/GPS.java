@@ -27,10 +27,11 @@ public class GPS implements LocationListener {
     LocationListener locationListener;
     SensorListener sensor;
     Trip trip;
+    GPSTask gpsTask;
 
-    public GPS(Context context) {
+    public GPS(Context context, String id) {
 
-        trip = new Trip();
+        trip = new Trip(id);
         sensor = new SensorListener(context);
 
         final long start_time = System.currentTimeMillis();
@@ -45,8 +46,9 @@ public class GPS implements LocationListener {
                 Log.d("trip", "lat: " + lat + ", lng: " + lng + ", " +
                         "time: " + time + "\n");
                 try {
+                    Log.d("trip", "Adding GPS Point...");
                     trip.addGPSPoint(sensor.get_sensor_data(), lat, lng, time);
-                    Log.d("trip", "Adding GPS Point");
+                    Log.d("trip", "Added.");
                 } catch (Exception e) {
                     Log.d("trip", "Could not add GPS Point");
                     Log.d("trip", e.toString());
@@ -74,10 +76,11 @@ public class GPS implements LocationListener {
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("GPS", "Location disabled\n");
+            Log.d("trip", "Location disabled\n");
             return;
         }
-        new GPSTask().execute();
+        gpsTask = new GPSTask();
+        gpsTask.execute();
         //locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
         //locationManager.requestSingleUpdate(locationProvider, locationListener);
 
@@ -107,14 +110,14 @@ public class GPS implements LocationListener {
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            String locationProvider = LocationManager.NETWORK_PROVIDER;
+            String locationProvider = LocationManager.GPS_PROVIDER;
 
             Looper.prepare();
 
 
             try {
                 Log.d("trip", "Updating Location...");
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(locationProvider, 1000, 0, locationListener);
                 Log.d("trip", "Location Updated");
             } catch (SecurityException s) {
                 Log.d("trip", "Failed to get GPS permission");
@@ -147,6 +150,8 @@ public class GPS implements LocationListener {
     }
 
     protected void stop() {
+        locationManager.removeUpdates(locationListener);
+        gpsTask.cancel(true);
         sensor.stop();
     }
 

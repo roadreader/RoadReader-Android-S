@@ -41,6 +41,7 @@ class GPSPoint {
      * through a get request to what3words
      * @return The name of the Square that the gps coordinates fall under
      */
+    /*
     protected String getSquare() throws IOException {
         String req = "https://api.what3words.com/v3/convert-to-3wa?coordinates=" +
                 lat +
@@ -66,4 +67,5 @@ class GPSPoint {
 
         return square_name;
     }
+    */
 }
