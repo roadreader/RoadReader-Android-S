@@ -80,6 +80,7 @@ public class GPS implements LocationListener {
             return;
         }
         gpsTask = new GPSTask();
+        sensor.start();
         gpsTask.execute();
         //locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
         //locationManager.requestSingleUpdate(locationProvider, locationListener);

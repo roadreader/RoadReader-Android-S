@@ -49,7 +49,7 @@ public class SensorListener implements SensorEventListener {
             ax.add(new Float(event.values[0]));
             ay.add(new Float(event.values[1]));
             az.add(new Float(event.values[2]));
-            Log.d("accelerometer", ax + " " + ay + " " + az + "\n");
+            Log.d("accelerometer", event.values[0] + " " + event.values[1] + " " + event.values[2] + "\n");
             try {
                 accel_writer.write(ax + " " + ay + " " + az + "\n");
             } catch(Exception e) {}
@@ -106,13 +106,14 @@ public class SensorListener implements SensorEventListener {
     }
 
     public HashMap<String, ArrayList<Float>> get_sensor_data() {
-        sensor_data.put("ax", ax);
-        sensor_data.put("ay", ay);
-        sensor_data.put("az", az);
-        sensor_data.put("gx", gx);
-        sensor_data.put("gy", gy);
-        sensor_data.put("gz", gz);
-        return sensor_data;
+        sensor_data.put("ax", new ArrayList<Float>(ax));
+        sensor_data.put("ay", new ArrayList<Float>(ay));
+        sensor_data.put("az", new ArrayList<Float>(az));
+        sensor_data.put("gx", new ArrayList<Float>(gx));
+        sensor_data.put("gy", new ArrayList<Float>(gy));
+        sensor_data.put("gz", new ArrayList<Float>(gz));
+        Log.d("trip", "ax: " + ax);
+        return new HashMap<>(sensor_data);
     }
 
     public void reset_sensor_data() {
