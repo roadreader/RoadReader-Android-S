@@ -116,6 +116,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     public void onCaptureClick(View view) {
 
         if (areCameraPermissionGranted()) {
+            Log.d("camera","record button pressed");
             startCapture();
         } else {
             requestCameraPermissions();
@@ -124,6 +125,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
     private void startCapture() {
 
+        if(isRecording)
+            Log.d("camera", "isrecording");
         if (isRecording) {
             // BEGIN_INCLUDE(stop_release_media_recorder)
 
@@ -185,7 +188,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
-
+            releaseMediaRecorder();
             //transition to listView
             startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
