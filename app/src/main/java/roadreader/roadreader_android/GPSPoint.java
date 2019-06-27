@@ -36,6 +36,22 @@ class GPSPoint {
         lng = longitude;
     }
 
+    public HashMap<String, ArrayList<Float>> getSensorData() {
+        return sensor_data;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLong() {
+        return lng;
+    }
+
     /**
      * Uses lat and lng to get the gps coordinate's corresponding square
      * through a get request to what3words

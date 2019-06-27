@@ -92,7 +92,7 @@ public class DisplayActivity extends AppCompatActivity {
             Toast.makeText(this, "Video Sent!", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Video Deleted!", Toast.LENGTH_SHORT).show();
-        video.delete();
+        //video.delete();
         startActivity(new Intent(DisplayActivity.this, ListActivity.class));
     }
 

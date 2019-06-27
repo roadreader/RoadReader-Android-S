@@ -14,6 +14,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -90,6 +92,7 @@ public class Request {
         //read trip.json file and convert it to trip class
         BufferedReader br = new BufferedReader(new FileReader(file));
         final Trip trip =  new Gson().fromJson(br, Trip.class);
+        List<GPSPoint> pts = trip.getGpsPoints();
 
         Log.d("database", "User ID: " + trip.getUserId());
 
