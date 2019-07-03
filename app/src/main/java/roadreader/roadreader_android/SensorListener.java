@@ -1,6 +1,7 @@
 package roadreader.roadreader_android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class SensorListener implements SensorEventListener {
@@ -23,6 +26,12 @@ public class SensorListener implements SensorEventListener {
     FileWriter accel_writer, gyro_writer;
     HashMap< String, ArrayList<Float> > sensor_data;
 
+    float _ax;
+    float _ay;
+    float _az;
+
+    private SendSensorData ssd;
+    private Timer t;
     /**
      * Constructor for SensorListener
      * @param context Context for CameraActivity
@@ -40,15 +49,26 @@ public class SensorListener implements SensorEventListener {
         gy = new ArrayList<>();
         gz = new ArrayList<>();
 
+        t = new Timer();
+
 
     }
+
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            ax.add(new Float(event.values[0]));
-            ay.add(new Float(event.values[1]));
-            az.add(new Float(event.values[2]));
+            _ax = event.values[0];
+            _ay = event.values[1];
+            _az = event.values[2];
+
+            ax.add(_ax);
+            ay.add(_ay);
+            az.add(_az);
+
+            //sensorActivity.setTextFields(new Float(event.values[0]),new Float(event.values[1]), new Float(event.values[2]));
+
             Log.d("accelerometer", event.values[0] + " " + event.values[1] + " " + event.values[2] + "\n");
             try {
                 accel_writer.write(ax + " " + ay + " " + az + "\n");
@@ -66,6 +86,21 @@ public class SensorListener implements SensorEventListener {
         }
     }
 
+    public void setListener(SendSensorData sendSensorData) {
+        ssd = sendSensorData;
+    }
+
+    public void setTimer() {
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(ssd != null){
+                    ssd.sendData(_ax, _ay, _az);
+                }
+
+            }
+        }, 0, 1000);
+    }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //Safe not to implement
@@ -89,6 +124,7 @@ public class SensorListener implements SensorEventListener {
         sensorManager.unregisterListener(this, accelerometer);
         sensorManager.unregisterListener(this, gyroscope);
         sensorManager.unregisterListener(this);
+        t.cancel();
     }
 
     protected void pause() {

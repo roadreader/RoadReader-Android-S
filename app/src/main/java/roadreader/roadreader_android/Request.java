@@ -1,9 +1,11 @@
 package roadreader.roadreader_android;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,9 +37,9 @@ public class Request {
     private static final String USER_AGENT = "Mozilla/5.0";
     String tripId;
     String path;
-    DisplayActivity display;
+    SensorActivity display;
 
-    public Request(DisplayActivity d) {
+    public Request(SensorActivity d) {
         display = d;
     }
 
@@ -85,9 +87,9 @@ public class Request {
         return "";
     }
 
-    public String sendTrip (File file, String filePath)
+    public String sendTrip (File file, final Context c)
             throws FileNotFoundException {
-        path = filePath; //get filepath of the trip's corresponding video
+        //path = filePath; //get filepath of the trip's corresponding video
 
         //read trip.json file and convert it to trip class
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -104,7 +106,8 @@ public class Request {
                 Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
                 //trip.setTripId(documentReference.getId());
                 tripId = documentReference.getId();
-                sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
+                Toast.makeText(c,tripId,Toast.LENGTH_SHORT).show();
+                //sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -141,7 +144,7 @@ public class Request {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 Log.d("database", "Successfully uploaded video");
-                display.delete(true);
+                //display.delete(true);
 
             }
         });

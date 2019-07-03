@@ -81,8 +81,8 @@ public class DisplayActivity extends AppCompatActivity {
     private void upload() throws FileNotFoundException {
         String tripName = getTimestamp(video.getName());
         File tripFile = new File(getFilesDir(), "Trips/" + tripName + ".json");
-        Request request = new Request(this);
-        request.sendTrip(tripFile, video.getAbsolutePath());
+        //Request request = new Request(this);
+        //request.sendTrip(tripFile, video.getAbsolutePath());
         //request.sendVideo(video.getAbsolutePath(), ref);
     }
 
@@ -92,7 +92,7 @@ public class DisplayActivity extends AppCompatActivity {
             Toast.makeText(this, "Video Sent!", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Video Deleted!", Toast.LENGTH_SHORT).show();
-        //video.delete();
+        video.delete();
         startActivity(new Intent(DisplayActivity.this, ListActivity.class));
     }
 

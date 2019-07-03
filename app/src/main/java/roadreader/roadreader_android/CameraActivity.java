@@ -194,9 +194,10 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)
 
-            new MediaPrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //new MediaPrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             //new MediaPrepareTask().execute(null, null, null);
             gps = new GPS(this, user.getUid());
+            isRecording = true;
             // END_INCLUDE(prepare_start_media_recorder)
 
         }
