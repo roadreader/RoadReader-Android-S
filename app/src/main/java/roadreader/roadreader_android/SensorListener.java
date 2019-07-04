@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class SensorListener implements SensorEventListener {
@@ -32,6 +33,8 @@ public class SensorListener implements SensorEventListener {
 
     private SendSensorData ssd;
     private Timer t;
+
+    ReentrantLock lock;
     /**
      * Constructor for SensorListener
      * @param context Context for CameraActivity
@@ -52,12 +55,16 @@ public class SensorListener implements SensorEventListener {
         t = new Timer();
 
 
+        lock = new ReentrantLock();
     }
 
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+
+        lock.lock();
+
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             _ax = event.values[0];
             _ay = event.values[1];
@@ -84,6 +91,8 @@ public class SensorListener implements SensorEventListener {
                 gyro_writer.write(event.values[0] + " " + event.values[1] + " " + event.values[2] + "\n");
             } catch(Exception e) {}
         }
+
+        lock.unlock();
     }
 
     public void setListener(SendSensorData sendSensorData) {
@@ -142,6 +151,8 @@ public class SensorListener implements SensorEventListener {
     }
 
     public HashMap<String, ArrayList<Float>> get_sensor_data() {
+        lock.lock();
+
         sensor_data.put("ax", new ArrayList<Float>(ax));
         sensor_data.put("ay", new ArrayList<Float>(ay));
         sensor_data.put("az", new ArrayList<Float>(az));
@@ -149,10 +160,16 @@ public class SensorListener implements SensorEventListener {
         sensor_data.put("gy", new ArrayList<Float>(gy));
         sensor_data.put("gz", new ArrayList<Float>(gz));
         Log.d("trip", "ax: " + ax);
+
+        lock.unlock();
+
         return new HashMap<>(sensor_data);
+
     }
 
     public void reset_sensor_data() {
+        lock.lock();
+
         sensor_data = new HashMap<>();
         ax = new ArrayList<>();
         ay = new ArrayList<>();
@@ -160,6 +177,8 @@ public class SensorListener implements SensorEventListener {
         gx = new ArrayList<>();
         gy = new ArrayList<>();
         gz = new ArrayList<>();
+
+        lock.unlock();
     }
 
 

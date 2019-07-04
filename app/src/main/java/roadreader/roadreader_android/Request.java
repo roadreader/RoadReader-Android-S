@@ -106,6 +106,7 @@ public class Request {
                 Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
                 //trip.setTripId(documentReference.getId());
                 tripId = documentReference.getId();
+                Log.d("database", "tripId: " + tripId);
                 Toast.makeText(c,tripId,Toast.LENGTH_SHORT).show();
                 //sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
             }
@@ -117,7 +118,7 @@ public class Request {
                     }
                 });
 
-        Log.d("database", "tripId: " + tripId);
+        //Log.d("database", "tripId: " + tripId);
         return trip.getUserId() + "/" + tripId;
     }
 

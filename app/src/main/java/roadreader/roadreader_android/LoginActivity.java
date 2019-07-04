@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (mAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(LoginActivity.this, SensorActivity.class));
+                    startActivity(new Intent(LoginActivity.this, CameraActivity.class));
                 }
 
 

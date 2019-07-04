@@ -192,6 +192,7 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
 
     @Override
     protected void onResume() {
+        Log.d("trip", "trip resumed");
         super.onResume();
         if(gps != null)
             gps.resume();
@@ -199,6 +200,7 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
 
     @Override
     protected void onStart() {
+        Log.d("trip", "trip started");
         super.onStart();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(gps != null)
@@ -207,11 +209,13 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
 
     @Override
     protected void onPause() {
+        Log.d("trip", "trip paused");
         super.onPause();
     }
 
     @Override
     protected void onStop() {
+        Log.d("trip", "trip stopped");
         super.onStop();
         if(gps != null)
             gps.stop();
