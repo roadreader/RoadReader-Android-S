@@ -11,8 +11,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.provider.Settings;
+import android.renderscript.RenderScript;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,9 +31,14 @@ public class GPS implements LocationListener {
     SensorListener sensor;
     Trip trip;
     GPSTask gpsTask;
+    Context context;
 
-    public GPS(Context context, String id) {
+    private SendGPSData sgd;
+    private HandlerThread handlerThread;
 
+    public GPS(Context c, String id) {
+
+        context  = c;
         trip = new Trip(id);
         sensor = new SensorListener(context);
 
@@ -42,6 +50,9 @@ public class GPS implements LocationListener {
             public void onLocationChanged(Location location) {
                 double lng = location.getLongitude();
                 double lat = location.getLatitude();
+
+                sgd.sendGPSData(lat,lng);
+
                 long time = System.currentTimeMillis() - start_time;
                 Log.d("trip", "lat: " + lat + ", lng: " + lng + ", " +
                         "time: " + time + "\n");
@@ -73,18 +84,68 @@ public class GPS implements LocationListener {
             }
         };
 
+        //startListening(context);
+
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("trip", "Location disabled\n");
             return;
         }
-        gpsTask = new GPSTask();
-        sensor.start();
-        gpsTask.execute();
-        //locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
-        //locationManager.requestSingleUpdate(locationProvider, locationListener);
 
+        /*
+        sensor.start();
+        handlerThread = new HandlerThread("GPS");
+        handlerThread.start();
+        Looper looper = handlerThread.getLooper();
+        locationManager.requestLocationUpdates(locationProvider,1000,0,locationListener,looper);
+        */
+
+
+        /*
+        sensor.start();
+        gpsTask = new GPSTask();
+        locationManager.requestLocationUpdates(locationProvider, 1000, 0, locationListener);
+        gpsTask.execute();
+        */
+        //startListening(context)
+
+
+    }
+
+    public void startListening() {
+        String locationProvider = LocationManager.GPS_PROVIDER;
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("trip", "Location disabled\n");
+            return;
+        }
+
+        /*
+        sensor.start();
+        gpsTask = new GPSTask();
+        locationManager.requestLocationUpdates(locationProvider, 1000, 0, locationListener);
+        gpsTask.execute();
+        */
+
+
+        sensor.start();
+        handlerThread = new HandlerThread("GPS");
+        handlerThread.start();
+        handlerThread.setPriority(Thread.MAX_PRIORITY);
+        Looper looper = handlerThread.getLooper();
+        locationManager.requestLocationUpdates(locationProvider,0,0,locationListener,looper);
+
+    }
+
+    public void stopListening() {
+        sensor.stop();
+        locationManager.removeUpdates(locationListener);
+        handlerThread.quit();
+    }
+
+    public void setListener(SendGPSData sendGPSData) {
+        sgd = sendGPSData;
     }
 
     public void track_on (Context context) {
@@ -143,6 +204,7 @@ public class GPS implements LocationListener {
 
 
     protected void resume() {
+        //startListening();
         sensor.resume();
     }
 
@@ -151,13 +213,26 @@ public class GPS implements LocationListener {
     }
 
     protected void stop() {
-        locationManager.removeUpdates(locationListener);
-        gpsTask.cancel(true);
+
+        /*
+        if(handlerThread != null){
+            handlerThread.quit();
+            handlerThread.interrupt();
+        }
+
+        if(locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+            locationListener = null;
+            locationManager = null;
+        }
+        //gpsTask.cancel(true);
         sensor.stop();
+        */
+        stopListening();
     }
 
     protected void pause() {
-        sensor.pause();
+        stopListening();
     }
 
     public Trip getTrip() {
