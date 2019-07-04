@@ -51,7 +51,7 @@ public class GPS implements LocationListener {
                 double lng = location.getLongitude();
                 double lat = location.getLatitude();
 
-                sgd.sendGPSData(lat,lng);
+                //sgd.sendGPSData(lat,lng);
 
                 long time = System.currentTimeMillis() - start_time;
                 Log.d("trip", "lat: " + lat + ", lng: " + lng + ", " +
