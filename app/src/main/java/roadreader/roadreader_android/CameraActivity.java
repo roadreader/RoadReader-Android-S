@@ -188,22 +188,26 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
-            releaseMediaRecorder();
             //transition to listView
             startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
 
             timeStamp = String.valueOf((System.currentTimeMillis() / 1000L));
-
+            setCaptureButtonText("Stop");
             // BEGIN_INCLUDE(prepare_start_media_recorder)
 
             //new MediaPrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             //new MediaPrepareTask().execute(null, null, null);
             gps = new GPS(this, user.getUid());
             //gps.setListener(this);
-            gps.sensor.setTimer();
             gps.startListening();
             isRecording = true;
+
+            if(prepareVideoRecorder()){
+                mMediaRecorder.start();
+            }else {
+                releaseMediaRecorder();
+            }
             // END_INCLUDE(prepare_start_media_recorder)
 
         }
