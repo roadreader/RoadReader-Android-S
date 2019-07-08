@@ -67,6 +67,7 @@ public class GPS implements LocationListener {
                     System.exit(-1);
                 }
                 ;
+                sgd.sendGPSData(lat,lng);
                 sensor.reset_sensor_data();
 
             }
