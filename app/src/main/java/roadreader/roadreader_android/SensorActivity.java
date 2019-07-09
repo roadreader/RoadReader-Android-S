@@ -207,6 +207,7 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
             gps.start();
     }
 
+    /*
     @Override
     protected void onPause() {
         Log.d("trip", "trip paused");
@@ -217,9 +218,10 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
     protected void onStop() {
         Log.d("trip", "trip stopped");
         super.onStop();
-        if(gps != null)
-            gps.stop();
+        //if(gps != null)
+        //    gps.stop();
     }
+    */
 
 
 
