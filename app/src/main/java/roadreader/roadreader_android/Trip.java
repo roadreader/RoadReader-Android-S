@@ -8,10 +8,14 @@ import java.util.List;
 
 public class Trip implements Cloneable{
 
-    List<GPSPoint> gpsPoints;
+    private List<GPSPoint> gpsPoints;
     private String userId;
     //private String tripID;
     //Queue<GPSPoint> gpsQueue;
+
+    public Trip() {
+
+    }
 
     public Trip(String uId) {
         gpsPoints = new ArrayList<>();
@@ -39,6 +43,10 @@ public class Trip implements Cloneable{
         return userId;
     }
 
+    public List<GPSPoint> getGpsPoints() {
+        return gpsPoints;
+    }
+
     /**
      * Creates new GPS instance and adds it to the trip.
      * @param sensor_data Data from accelerometer and gyroscope since last recorded GPS location
@@ -51,6 +59,8 @@ public class Trip implements Cloneable{
         gpsPoints.add(new GPSPoint(sensor_data, latitude, longitude, time));
 
     }
+
+
 
     /*
     public void processGPSPoint() throws IOException {

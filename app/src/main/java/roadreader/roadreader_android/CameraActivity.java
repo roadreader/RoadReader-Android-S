@@ -138,7 +138,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
                 // In this case the output file is not properly constructed ans should be deleted.
                 Log.d(TAG, "RuntimeException: stop() is called immediately after start()");
                 //noinspection ResultOfMethodCallIgnored
-                mOutputFile.delete();
+                //mOutputFile.delete();
             }
 
             Trip trip;
@@ -197,8 +197,13 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)
 
-            new MediaPrepareTask().execute(null, null, null);
+            //new MediaPrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //new MediaPrepareTask().execute(null, null, null);
             gps = new GPS(this, user.getUid());
+            //gps.setListener(this);
+            gps.sensor.setTimer();
+            gps.startListening();
+            isRecording = true;
             // END_INCLUDE(prepare_start_media_recorder)
 
         }

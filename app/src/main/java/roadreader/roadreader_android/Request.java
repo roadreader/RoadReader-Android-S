@@ -1,9 +1,11 @@
 package roadreader.roadreader_android;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -14,6 +16,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -33,9 +37,9 @@ public class Request {
     private static final String USER_AGENT = "Mozilla/5.0";
     String tripId;
     String path;
-    DisplayActivity display;
+    SensorActivity display;
 
-    public Request(DisplayActivity d) {
+    public Request(SensorActivity d) {
         display = d;
     }
 
@@ -83,13 +87,14 @@ public class Request {
         return "";
     }
 
-    public String sendTrip (File file, String filePath)
+    public String sendTrip (File file, final Context c)
             throws FileNotFoundException {
-        path = filePath; //get filepath of the trip's corresponding video
+        //path = filePath; //get filepath of the trip's corresponding video
 
         //read trip.json file and convert it to trip class
         BufferedReader br = new BufferedReader(new FileReader(file));
         final Trip trip =  new Gson().fromJson(br, Trip.class);
+        List<GPSPoint> pts = trip.getGpsPoints();
 
         Log.d("database", "User ID: " + trip.getUserId());
 
@@ -101,7 +106,9 @@ public class Request {
                 Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
                 //trip.setTripId(documentReference.getId());
                 tripId = documentReference.getId();
-                sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
+                Log.d("database", "tripId: " + tripId);
+                Toast.makeText(c,tripId,Toast.LENGTH_SHORT).show();
+                //sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -111,7 +118,7 @@ public class Request {
                     }
                 });
 
-        Log.d("database", "tripId: " + tripId);
+        //Log.d("database", "tripId: " + tripId);
         return trip.getUserId() + "/" + tripId;
     }
 
@@ -138,7 +145,7 @@ public class Request {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 Log.d("database", "Successfully uploaded video");
-                display.delete(true);
+                //display.delete(true);
 
             }
         });
